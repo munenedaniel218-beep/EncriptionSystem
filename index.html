@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Cipher Vault</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<main>
+
+    <h1>Cipher Vault</h1>
+
+    <p class="sub">
+        Encrypt a message or a file with a password.
+        Only the same password can decrypt it.
+    </p>
+
+    <div class="tabs" role="tablist">
+
+        <button role="tab" id="tabE" aria-selected="true">
+            Encrypt
+        </button>
+
+        <button role="tab" id="tabD" aria-selected="false">
+            Decrypt
+        </button>
+
+    </div>
+
+    <!-- ENCRYPT SECTION -->
+
+    <section id="encPane">
+
+        <label for="plain">Message</label>
+
+        <textarea id="plain" placeholder="Type the secret message here"></textarea>
+
+        <label for="fileE">Or choose a file to encrypt instead</label>
+
+        <input id="fileE" type="file">
+
+        <p class="hint">
+            Any file type, up to 10 MB. If a file is chosen,
+            it is encrypted instead of the message.
+        </p>
+
+        <label for="pwE">Password</label>
+
+        <div class="row">
+
+            <input id="pwE" type="password" autocomplete="new-password">
+
+            <button class="sec" id="showE" type="button">
+                Show
+            </button>
+
+        </div>
+
+        <div class="meter">
+            <i id="bar"></i>
+        </div>
+
+        <div id="strength" class="hint"></div>
+
+        <button class="act" id="encBtn" type="button">
+            Encrypt
+        </button>
+
+        <div class="msg" id="encMsg"></div>
+
+        <div class="out" id="encOut">
+
+            <label>Encrypted result (unreadable)</label>
+
+            <pre id="cipherOut"></pre>
+
+            <button class="sec" id="saveEnc" type="button">
+                Save encrypted file
+            </button>
+
+            <button class="sec" id="copyBtn" type="button">
+                Copy encrypted text
+            </button>
+
+            <button class="sec" id="goDec" type="button">
+                Go to Decrypt tab
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- DECRYPT SECTION -->
+
+    <section id="decPane" hidden>
+
+        <label for="cipherIn">Encrypted text</label>
+
+        <textarea id="cipherIn" class="cipher"
+        placeholder="Paste the encrypted text here, or load an encrypted file below"></textarea>
+
+        <label for="fileD">
+            Or load an encrypted file (.txt saved by this tool)
+        </label>
+
+        <input id="fileD" type="file" accept=".txt,text/plain">
+
+        <label for="pwD">Password</label>
+
+        <div class="row">
+
+            <input id="pwD" type="password" autocomplete="off">
+
+            <button class="sec" id="showD" type="button">
+                Show
+            </button>
+
+        </div>
+
+        <button class="act" id="decBtn" type="button">
+            Decrypt
+        </button>
+
+        <div class="msg" id="decMsg"></div>
+
+        <div class="out" id="decOut">
+
+            <label>Decrypted result</label>
+
+            <pre id="plainOut"
+            style="color:var(--ink);background:var(--bg);border:1px solid var(--line);font-family:inherit"></pre>
+
+            <button class="sec" id="saveDec" type="button" hidden>
+                Save decrypted file
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- HOW IT WORKS -->
+
+    <details>
+
+        <summary>How it works</summary>
+
+        <p>
+            Your password is stretched into a 256-bit key with
+            <code>PBKDF2</code> (SHA-256, 250,000 rounds)
+            and a random salt.
+
+            The message or file is then encrypted with
+            <code>AES-256-GCM</code> using a random IV.
+
+            GCM also adds an authentication tag, so a wrong
+            password or any edit to the data makes decryption fail.
+
+            The original file name is encrypted together with
+            the contents.
+
+            The output is salt + IV + ciphertext in Base64,
+            saved as a .txt file so it can be sent anywhere.
+
+            Everything runs in your browser; nothing is uploaded.
+        </p>
+
+    </details>
+
+</main>
+
+<script src="script.js"></script>
+
+</body>
+</html>
